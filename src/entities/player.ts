@@ -54,7 +54,7 @@ export default class Player extends Physics.Arcade.Sprite {
 
     public takeDamage(amount: number) {
         this.health -= amount
-        console.log(`Player health: ${this.health}`)
+        console.log(`Player health: ${this.health}`) // Add health bar
         if (this.health <= 0) {
             this.kill()
         }
