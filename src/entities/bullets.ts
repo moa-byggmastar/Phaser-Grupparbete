@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
 
-export default class Fire {
+export default class Bullets {
 
 }
