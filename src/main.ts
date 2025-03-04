@@ -1,13 +1,14 @@
 import './style.css';
 import Phaser from 'phaser';
 import GameScene from './scenes/gamescene';
+import MainMenuScene from './scenes/mainmenu';
 
 const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
     width: 800,
     height: 450,
     parent: 'app',
-    scene: [GameScene],
+    scene: [MainMenuScene, GameScene],
     physics: {
         default: 'arcade',
         arcade: {
