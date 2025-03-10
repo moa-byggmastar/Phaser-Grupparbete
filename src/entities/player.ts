@@ -1,7 +1,7 @@
 import { Physics, Scene } from 'phaser'
 
 export default class Player extends Physics.Arcade.Sprite {
-    private speed = 200
+    private speed = 150
     private fireRate = 500
     private lastFired = 0
     private health = 100
