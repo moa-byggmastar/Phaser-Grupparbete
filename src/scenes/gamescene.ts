@@ -18,13 +18,13 @@ export default class GameScene extends Phaser.Scene {
 
     create() {
 
-         // Temporary, remove if needed
+        // Temporary, remove if needed
         new Text(this, Number(this.game.config.width) / 2, 100, 'Game scene', 60)
 
         this.enemy = new Enemy(this, 800, 450)
 
         // ---
-        
+
     };
 
     update(time: number, delta: number): void {
