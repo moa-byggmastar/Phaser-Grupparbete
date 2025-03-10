@@ -7,8 +7,8 @@ export default class Enemy extends Physics.Arcade.Sprite {
     private targetY: number
     declare body: Phaser.Physics.Arcade.Body
 
-    constructor(scene: Scene, x: number, y: number) {
-        super(scene, x, y, 'enemy1')
+    constructor(scene: Scene, x: number, y: number, sprite: string) {
+        super(scene, x, y, sprite)
 
         scene.add.existing(this)
         scene.physics.add.existing(this)
