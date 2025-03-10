@@ -5,6 +5,7 @@ export default class Player extends Physics.Arcade.Sprite {
     private fireRate = 500
     private lastFired = 0
     private health = 100
+    declare body: Phaser.Physics.Arcade.Body
 
     constructor(scene: Scene, x: number, y: number) {
         super(scene, x, y, 'player')
@@ -16,6 +17,8 @@ export default class Player extends Physics.Arcade.Sprite {
         this.setDepth(1)
 
         this.scene.input.keyboard?.on('keydown-SPACE', this.shoot, this)
+
+        this.body!.setAllowGravity(false)
     }
 
     public update(time: number, cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
