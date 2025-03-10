@@ -28,6 +28,7 @@ export default class GameScene extends Phaser.Scene {
 
     update(time: number, delta: number): void {
         this.enemy.update()
+        this.player.update(time, this.cursors!)
     };
 
 };
