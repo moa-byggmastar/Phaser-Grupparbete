@@ -32,9 +32,9 @@ export default class GameScene extends Phaser.Scene {
         this.enemies.push(new Enemy(this, 100, 450, 'enemy1'))
         this.enemies.push(new Enemy(this, 0, 450, 'enemy1'))
 
-        this.physics.add.collider(this.player, this.enemies, this.handleCollision, undefined, this)
-
         this.cursors = this.input.keyboard!.createCursorKeys()
+
+        this.physics.add.collider(this.player, this.enemies, this.handleCollision, null, this)
         // ---
 
     };
