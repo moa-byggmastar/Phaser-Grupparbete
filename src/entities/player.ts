@@ -1,10 +1,12 @@
-import { Physics, Scene } from 'phaser'
+import { Input, Physics, Scene } from 'phaser'
 
 export default class Player extends Physics.Arcade.Sprite {
-    private speed = 150
+    private speed = 125
+    private sprintSpeed = 200
     private fireRate = 500
     private lastFired = 0
     private health = 100
+    private keys!: { [key: string]: Input.Keyboard.Key }; // Stores WASD keys
     declare body: Phaser.Physics.Arcade.Body
 
     constructor(scene: Scene, x: number, y: number) {
@@ -19,32 +21,57 @@ export default class Player extends Physics.Arcade.Sprite {
         this.scene.input.keyboard?.on('keydown-SPACE', this.shoot, this)
 
         this.body!.setAllowGravity(false)
+
+        // Setup WASD keys
+        this.keys = scene.input.keyboard!.addKeys({
+            up: Input.Keyboard.KeyCodes.W,
+            down: Input.Keyboard.KeyCodes.S,
+            left: Input.Keyboard.KeyCodes.A,
+            right: Input.Keyboard.KeyCodes.D,
+            upArrow: Input.Keyboard.KeyCodes.UP,
+            downArrow: Input.Keyboard.KeyCodes.DOWN,
+            leftArrow: Input.Keyboard.KeyCodes.LEFT,
+            rightArrow: Input.Keyboard.KeyCodes.RIGHT,
+            sprint: Input.Keyboard.KeyCodes.SHIFT
+        }) as { [key: string]: Input.Keyboard.Key };
     }
 
-    public update(time: number, cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
-        this.handleMovement(cursors)
+    public update(time: number) {
+        this.handleMovement()
         this.lastFired = time
     }
 
-    private handleMovement(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
-        if (!cursors) return
-
-        let velocityX = 0
-        let velocityY = 0
-
-        if (cursors.left.isDown) {
-            velocityX = -this.speed
-        } else if (cursors.right.isDown) {
-            velocityX = this.speed
+    private handleMovement() {
+    
+        let velocityX = 0;
+        let velocityY = 0;
+    
+        // Determines which speed variable to use (for walking or sprinting)
+        const isSprinting = this.keys.sprint.isDown;
+        const currentSpeed = isSprinting ? this.sprintSpeed : this.speed;
+    
+        if (this.keys.left.isDown || this.keys.leftArrow.isDown) {
+            velocityX = -1;
+            this.flipX = true;
+        } else if (this.keys.right.isDown || this.keys.rightArrow.isDown) {
+            velocityX = 1;
+            this.flipX = false;
         }
 
-        if (cursors.up.isDown) {
-            velocityY = -this.speed
-        } else if (cursors.down.isDown) {
-            velocityY = this.speed
+        if (this.keys.up.isDown || this.keys.upArrow.isDown) {
+            velocityY = -1;
+        } else if (this.keys.down.isDown || this.keys.downArrow.isDown) {
+            velocityY = 1;
         }
-
-        this.setVelocity(velocityX, velocityY)
+    
+        // Normalize diagonal movement (Makes it so the player doesn't go faster when moving diagonally)
+        const length = Math.hypot(velocityX, velocityY);
+        if (length > 0) {
+            velocityX = (velocityX / length) * currentSpeed;
+            velocityY = (velocityY / length) * currentSpeed;
+        }
+    
+        this.setVelocity(velocityX, velocityY);
     }
 
     private shoot() {
