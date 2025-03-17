@@ -19,4 +19,5 @@ const config: Phaser.Types.Core.GameConfig = {
     antialias: false
 };
 
+// @ts-ignore
 const game = new Phaser.Game(config);
