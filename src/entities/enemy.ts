@@ -40,8 +40,14 @@ export default class Enemy extends Physics.Arcade.Sprite {
 
     private kill() {
         console.log('Enemy killed')
-        this.setActive(false)
-        this.setVisible(false)
-        this.body.setVelocity(0, 0)
+
+        // @ts-ignore
+        const index = this.scene.enemies.indexOf(this);
+        if (index > -1) {
+            // @ts-ignore
+            this.scene.enemies.splice(index, 1);  // Remove the enemy from the enemies list
+        }
+
+        this.destroy()
     }
 }

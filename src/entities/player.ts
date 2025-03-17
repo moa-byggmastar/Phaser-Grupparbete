@@ -1,11 +1,12 @@
 import { Input, Physics, Scene } from 'phaser'
+import Bullet from './bullets'
 
 export default class Player extends Physics.Arcade.Sprite {
     private speed = 125
     private sprintSpeed = 200
     private fireRate = 500
     private lastFired = 0
-    private health = 100
+    public health = 100
     private keys!: { [key: string]: Input.Keyboard.Key }; // Stores WASD keys
     declare body: Phaser.Physics.Arcade.Body
 
@@ -17,9 +18,6 @@ export default class Player extends Physics.Arcade.Sprite {
 
         this.setCollideWorldBounds(true)
         this.setDepth(1)
-
-        this.scene.input.keyboard?.on('keydown-SPACE', this.shoot, this)
-
         this.body!.setAllowGravity(false)
 
         // Setup WASD keys
@@ -32,17 +30,17 @@ export default class Player extends Physics.Arcade.Sprite {
             downArrow: Input.Keyboard.KeyCodes.DOWN,
             leftArrow: Input.Keyboard.KeyCodes.LEFT,
             rightArrow: Input.Keyboard.KeyCodes.RIGHT,
-            sprint: Input.Keyboard.KeyCodes.SHIFT
+            sprint: Input.Keyboard.KeyCodes.SHIFT,
+            shoot: Input.Keyboard.KeyCodes.SPACE
         }) as { [key: string]: Input.Keyboard.Key };
     }
 
-    public update(time: number) {
+    public update() {
         this.handleMovement()
-        this.lastFired = time
+        this.handleShoot()
     }
 
     private handleMovement() {
-    
         let velocityX = 0;
         let velocityY = 0;
     
@@ -64,7 +62,7 @@ export default class Player extends Physics.Arcade.Sprite {
             velocityY = 1;
         }
     
-        // Normalize diagonal movement (Makes it so the player doesn't go faster when moving diagonally)
+        // Makes it so the player doesn't go faster when moving diagonally
         const length = Math.hypot(velocityX, velocityY);
         if (length > 0) {
             velocityX = (velocityX / length) * currentSpeed;
@@ -74,11 +72,22 @@ export default class Player extends Physics.Arcade.Sprite {
         this.setVelocity(velocityX, velocityY);
     }
 
-    private shoot() {
-        const time = this.scene.time.now
-        if (time > this.lastFired + this.fireRate) {
-            this.lastFired = time
-            console.log('Shoot!') // Add bullets later
+    private handleShoot() {
+        const time = this.scene.time.now;
+    
+        if (time > this.lastFired + this.fireRate && this.keys.shoot.isDown) {
+            const bullet = new Bullet(this.scene, this.x, this.y);
+            this.scene.add.existing(bullet);
+                
+            // @ts-ignore
+            this.scene.bullets.push(bullet);
+            
+            const targetX = this.scene.input.mousePointer.x;
+            const targetY = this.scene.input.mousePointer.y;
+    
+            bullet.fire(targetX, targetY);
+    
+            this.lastFired = time;
         }
     }
 

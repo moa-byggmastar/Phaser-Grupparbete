@@ -2,11 +2,12 @@ import Phaser from "phaser";
 import Text from "../graphics/text";
 import Player from "../entities/player";
 import Enemy from "../entities/enemy";
+import Bullet from "../entities/bullets";
 
 export default class GameScene extends Phaser.Scene {
     player!: Player;
-    cursors: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
-    enemies: any;
+    enemies: Enemy[] = [];
+    bullets: Bullet[] = [];
     constructor() {
         super('gamescene');
     };
@@ -22,7 +23,6 @@ export default class GameScene extends Phaser.Scene {
         new Text(this, Number(this.game.config.width) / 2, 100, 'Game scene', 60)
         this.player = new Player(this, Number(this.game.config.width) / 2, Number(this.game.config.width) / 2)
 
-        this.enemies = []
         this.enemies.push(new Enemy(this, 800, 450, 'enemy1'))
         this.enemies.push(new Enemy(this, 700, 450, 'enemy1'))
         this.enemies.push(new Enemy(this, 600, 450, 'enemy1'))
@@ -32,21 +32,26 @@ export default class GameScene extends Phaser.Scene {
         this.enemies.push(new Enemy(this, 100, 450, 'enemy1'))
         this.enemies.push(new Enemy(this, 0, 450, 'enemy1'))
 
-        this.cursors = this.input.keyboard!.createCursorKeys()
+        // @ts-ignore
+        this.physics.add.collider(this.bullets, this.enemies, this.handleBulletEnemyCollision, null, this);
 
-        this.physics.add.collider(this.player, this.enemies, this.handleCollision, null, this)
+        // @ts-ignore
+        this.physics.add.collider(this.player, this.enemies, this.handlePlayerEnemyCollision, null, this)
         // ---
 
     };
 
-    update(time: number, delta: number): void {
-        for (let i = 0; i < this.enemies.length; i++) {
-            this.enemies[i].update()
-        }
-        this.player.update(time, this.cursors!)
+    update(time: number, delta: number): void {time;delta;
+        this.enemies.forEach((enemy) => enemy.update());
+        this.player.update()
     };
 
-    private handleCollision(player: Player, enemy: Enemy) {
+    private handleBulletEnemyCollision(bullet: Bullet, enemy: Enemy) {
+        bullet.destroy(); // Destroy the bullet on collision
+        enemy.takeDamage(bullet.damage); // Apply damage to the enemy
+    }
+
+    private handlePlayerEnemyCollision(player: Player, enemy: Enemy) {player;enemy;
         this.scene.pause()
         alert('Game Over!')
     }

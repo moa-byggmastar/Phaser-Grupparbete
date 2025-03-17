@@ -20,8 +20,8 @@ export default class MainMenuScene extends Phaser.Scene {
 
     };
 
-    update(time: number, delta: number): void {
-
+    update(time: number, delta: number): void {time;delta;
+    
     };
 
 };
