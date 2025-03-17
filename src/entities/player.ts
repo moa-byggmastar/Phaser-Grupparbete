@@ -43,11 +43,11 @@ export default class Player extends Physics.Arcade.Sprite {
     private handleMovement() {
         let velocityX = 0;
         let velocityY = 0;
-    
+
         // Determines which speed variable to use (for walking or sprinting)
         const isSprinting = this.keys.sprint.isDown;
         const currentSpeed = isSprinting ? this.sprintSpeed : this.speed;
-    
+
         if (this.keys.left.isDown || this.keys.leftArrow.isDown) {
             velocityX = -1;
             this.flipX = true;
@@ -61,32 +61,32 @@ export default class Player extends Physics.Arcade.Sprite {
         } else if (this.keys.down.isDown || this.keys.downArrow.isDown) {
             velocityY = 1;
         }
-    
+
         // Makes it so the player doesn't go faster when moving diagonally
         const length = Math.hypot(velocityX, velocityY);
         if (length > 0) {
             velocityX = (velocityX / length) * currentSpeed;
             velocityY = (velocityY / length) * currentSpeed;
         }
-    
+
         this.setVelocity(velocityX, velocityY);
     }
 
     private handleShoot() {
         const time = this.scene.time.now;
-    
+
         if (time > this.lastFired + this.fireRate && this.keys.shoot.isDown) {
             const bullet = new Bullet(this.scene, this.x, this.y);
             this.scene.add.existing(bullet);
-                
+
             // @ts-ignore
             this.scene.bullets.push(bullet);
-            
+
             const targetX = this.scene.input.mousePointer.x;
             const targetY = this.scene.input.mousePointer.y;
-    
+
             bullet.fire(targetX, targetY);
-    
+
             this.lastFired = time;
         }
     }
@@ -99,7 +99,7 @@ export default class Player extends Physics.Arcade.Sprite {
         }
     }
 
-    private kill() {
+    public kill() {
         console.log('Player has died!') // Add game over screen?
         this.setActive(false)
         this.setVisible(false)
