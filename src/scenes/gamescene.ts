@@ -53,6 +53,7 @@ export default class GameScene extends Phaser.Scene {
     private handlePlayerEnemyCollision(player: Player, enemy: Enemy) {
         player; enemy;
         player.kill()
+        this.scene.pause()
 
         const gameOverText = new Text(this, Number(this.game.config.width) / 2, Number(this.game.config.height) / 2, 'Game Over', 60)
         gameOverText.setOrigin(0.5)
