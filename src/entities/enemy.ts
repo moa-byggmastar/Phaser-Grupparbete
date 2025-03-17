@@ -39,8 +39,6 @@ export default class Enemy extends Physics.Arcade.Sprite {
     }
 
     private kill() {
-        console.log('Enemy killed')
-
         // @ts-ignore
         const index = this.scene.enemies.indexOf(this);
         if (index > -1) {
