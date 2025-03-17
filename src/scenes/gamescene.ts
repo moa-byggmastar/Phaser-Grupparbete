@@ -19,8 +19,6 @@ export default class GameScene extends Phaser.Scene {
 
     create() {
 
-        // Temporary, remove if needed
-        new Text(this, Number(this.game.config.width) / 2, 100, 'Game scene', 60)
         this.player = new Player(this, Number(this.game.config.width) / 2, Number(this.game.config.width) / 2)
 
         this.enemies.push(new Enemy(this, 800, 450, 'enemy1'))
@@ -41,7 +39,8 @@ export default class GameScene extends Phaser.Scene {
 
     };
 
-    update(time: number, delta: number): void {time;delta;
+    update(time: number, delta: number): void {
+        time; delta;
         this.enemies.forEach((enemy) => enemy.update());
         this.player.update()
     };
@@ -51,8 +50,12 @@ export default class GameScene extends Phaser.Scene {
         enemy.takeDamage(bullet.damage); // Apply damage to the enemy
     }
 
-    private handlePlayerEnemyCollision(player: Player, enemy: Enemy) {player;enemy;
+    private handlePlayerEnemyCollision(player: Player, enemy: Enemy) {
+        player; enemy;
+        player.kill()
         this.scene.pause()
-        alert('Game Over!')
+
+        const gameOverText = new Text(this, Number(this.game.config.width) / 2, Number(this.game.config.height) / 2, 'Game Over', 60)
+        gameOverText.setOrigin(0.5)
     }
 };
