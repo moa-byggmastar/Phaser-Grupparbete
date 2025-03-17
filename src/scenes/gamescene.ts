@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import Text from "../graphics/text";
 import Player from "../entities/player";
 import Enemy from "../entities/enemy";
-import Bullet from "../entities/bullets";
+import Bullet from "../entities/bullet";
 
 export default class GameScene extends Phaser.Scene {
     player!: Player;

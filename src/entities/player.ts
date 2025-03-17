@@ -1,5 +1,5 @@
 import { Input, Physics, Scene } from 'phaser'
-import Bullet from './bullets'
+import Bullet from "../entities/bullet"
 
 export default class Player extends Physics.Arcade.Sprite {
     private speed = 125
