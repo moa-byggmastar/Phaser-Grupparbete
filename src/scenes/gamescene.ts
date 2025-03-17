@@ -46,8 +46,8 @@ export default class GameScene extends Phaser.Scene {
     };
 
     private handleBulletEnemyCollision(bullet: Bullet, enemy: Enemy) {
-        bullet.destroy(); // Destroy the bullet on collision
-        enemy.takeDamage(bullet.damage); // Apply damage to the enemy
+        bullet.destroy();
+        enemy.takeDamage(bullet.damage);
     }
 
     private handlePlayerEnemyCollision(player: Player, enemy: Enemy) {
