@@ -42,8 +42,8 @@ export default class GameScene extends Phaser.Scene {
 
     };
 
+    //@ts-ignore
     update(time: number, delta: number): void {
-        time; delta;
 
         this.waveTextUpdate(delta)
         this.enemies.forEach((enemy) => enemy.update());
