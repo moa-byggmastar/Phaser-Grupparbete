@@ -1,12 +1,19 @@
 import { Input, Physics, Scene } from 'phaser'
 import Bullet from "../entities/bullet"
+import Enemy from './enemy'
 
 export default class Player extends Physics.Arcade.Sprite {
+    public health = 4
     private speed = 125
     private sprintSpeed = 200
+    private effectX = 0
+    private effectY = 0
+    private knockbackStrength = 750
     private fireRate = 500
     private lastFired = 0
-    public health = 100
+    private invincibleTime = 50
+    private lastDamage = 0
+    
     private keys!: { [key: string]: Input.Keyboard.Key }; // Stores WASD keys
     declare body: Phaser.Physics.Arcade.Body
 
@@ -35,9 +42,12 @@ export default class Player extends Physics.Arcade.Sprite {
         }) as { [key: string]: Input.Keyboard.Key };
     }
 
-    public update() {
+    public update(delta: number) {
         this.handleMovement()
         this.handleShoot()
+        const damping = (1-delta/1000*10)
+        this.effectX *= damping
+        this.effectY *= damping
     }
 
     private handleMovement() {
@@ -69,7 +79,7 @@ export default class Player extends Physics.Arcade.Sprite {
             velocityY = (velocityY / length) * currentSpeed;
         }
 
-        this.setVelocity(velocityX, velocityY);
+        this.setVelocity(velocityX+this.effectX, velocityY+this.effectY);
     }
 
     private handleShoot() {
@@ -91,18 +101,33 @@ export default class Player extends Physics.Arcade.Sprite {
         }
     }
 
-    public takeDamage(amount: number) {
-        this.health -= amount
-        console.log(`Player health: ${this.health}`) // Add health bar
+    public takeDamage(amount: number, enemy: Enemy) {
+        const time = this.scene.time.now;
+
+        if (time > this.lastDamage + this.invincibleTime) {
+            /* const angle = Phaser.Math.Angle.Between(this.x, this.y, enemy.x, enemy.y);
+            this.body.setVelocity(Math.cos(angle) * this.knockback, Math.sin(angle) * this.knockback); */
+            let dX = this.x - enemy.x
+            let dY = this.y - enemy.y
+            const hypot = Math.sqrt(dX*dX+dY*dY)
+            dX/=hypot
+            dY/=hypot
+            this.effectX = dX * this.knockbackStrength
+            this.effectY = dY * this.knockbackStrength
+
+            this.health -= amount
+            this.lastDamage = time;
+
+            console.log(`Player health: ${this.health}`)
+        }
+        
         if (this.health <= 0) {
             this.kill()
         }
     }
 
-    public kill() {
-        console.log('Player has died!') // Add game over screen?
+    private kill() {
         this.setActive(false)
-        this.setVisible(false)
     }
 
 }

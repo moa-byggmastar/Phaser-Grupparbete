@@ -35,10 +35,10 @@ export default class GameScene extends Phaser.Scene {
         this.waveTimer = new Text(this, Number(this.game.config.width) / 2, 75, 'Next Wave in:' + this.timeRemaining.toFixed(1) + 's', 15)
 
         // @ts-ignore
-        this.physics.add.collider(this.bullets, this.enemies, this.handleBulletEnemyCollision, null, this)
+        this.physics.add.overlap(this.bullets, this.enemies, this.handleBulletEnemyCollision, null, this)
 
         // @ts-ignore
-        this.physics.add.collider(this.player, this.enemies, this.handlePlayerEnemyCollision, null, this)
+        this.physics.add.overlap(this.player, this.enemies, this.handlePlayerEnemyCollision, null, this)
 
     };
 
@@ -46,7 +46,7 @@ export default class GameScene extends Phaser.Scene {
         time; delta;
 
         this.enemies.forEach((enemy) => enemy.update());
-        this.player.update()
+        this.player.update(delta)
 
         this.waveText.text = 'Wave: ' + this.waveManager.waveNumber
 
@@ -65,11 +65,11 @@ export default class GameScene extends Phaser.Scene {
     }
 
     private handlePlayerEnemyCollision(player: Player, enemy: Enemy) {
-        player; enemy;
-        player.kill()
-        this.scene.pause()
-
-        const gameOverText = new Text(this, Number(this.game.config.width) / 2, Number(this.game.config.height) / 2, 'Game Over', 60)
-        gameOverText.setOrigin(0.5)
+        player.takeDamage(1, enemy)
     }
 };
+
+/* const gameOverText = new Text(this, Number(this.game.config.width) / 2, Number(this.game.config.height) / 2, 'Game Over', 60)
+gameOverText.setOrigin(0.5)
+
+this.scene.pause() */
