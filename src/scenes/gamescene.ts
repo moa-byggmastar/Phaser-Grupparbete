@@ -45,18 +45,9 @@ export default class GameScene extends Phaser.Scene {
     update(time: number, delta: number): void {
         time; delta;
 
+        this.waveTextUpdate(delta)
         this.enemies.forEach((enemy) => enemy.update());
         this.player.update(delta)
-
-        this.waveText.text = 'Wave: ' + this.waveManager.waveNumber
-
-        if (this.timeRemaining >= 0) {
-            this.timeRemaining -= delta / 1000;
-        } else if (this.timeRemaining <= 0 /* && this.enemies.length === 0 */) {
-            this.timeRemaining = this.waveManager.waveInterval / 1000;
-        }
-
-        this.waveTimer.text = 'Next Wave in: ' + this.timeRemaining.toFixed(1) + 's';
     };
 
     private handleBulletEnemyCollision(bullet: Bullet, enemy: Enemy) {
@@ -66,10 +57,29 @@ export default class GameScene extends Phaser.Scene {
 
     private handlePlayerEnemyCollision(player: Player, enemy: Enemy) {
         player.takeDamage(1, enemy)
+        if (player.dead) {
+            player.kill()
+
+            const gameOverText = new Text(this, Number(this.game.config.width) / 2, Number(this.game.config.height) / 2, 'Game Over', 60)
+            gameOverText.setOrigin(0.5)
+            
+            this.scene.pause()
+        }
+    }
+
+    private waveTextUpdate(delta: number) {
+        this.waveText.text = 'Wave: ' + this.waveManager.waveNumber
+
+        if (this.timeRemaining >= 0) {
+            this.timeRemaining -= delta / 1000;
+        } else if (this.timeRemaining <= 0 /* && this.enemies.length === 0 */) {
+            this.timeRemaining = this.waveManager.waveInterval / 1000;
+        }
+
+        if (this.waveManager.waveNumber === 0) {
+            this.waveTimer.text = 'First Wave in: ' + this.timeRemaining.toFixed(1) + 's';
+        } else {
+            this.waveTimer.text = 'Next Wave in: ' + this.timeRemaining.toFixed(1) + 's';
+        }
     }
 };
-
-/* const gameOverText = new Text(this, Number(this.game.config.width) / 2, Number(this.game.config.height) / 2, 'Game Over', 60)
-gameOverText.setOrigin(0.5)
-
-this.scene.pause() */

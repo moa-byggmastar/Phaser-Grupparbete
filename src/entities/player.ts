@@ -4,6 +4,7 @@ import Enemy from './enemy'
 
 export default class Player extends Physics.Arcade.Sprite {
     public health = 4
+    public dead = false
     private speed = 125
     private sprintSpeed = 200
     private effectX = 0
@@ -105,8 +106,6 @@ export default class Player extends Physics.Arcade.Sprite {
         const time = this.scene.time.now;
 
         if (time > this.lastDamage + this.invincibleTime) {
-            /* const angle = Phaser.Math.Angle.Between(this.x, this.y, enemy.x, enemy.y);
-            this.body.setVelocity(Math.cos(angle) * this.knockback, Math.sin(angle) * this.knockback); */
             let dX = this.x - enemy.x
             let dY = this.y - enemy.y
             const hypot = Math.sqrt(dX*dX+dY*dY)
@@ -122,12 +121,14 @@ export default class Player extends Physics.Arcade.Sprite {
         }
         
         if (this.health <= 0) {
-            this.kill()
+            this.dead = true
         }
     }
 
-    private kill() {
-        this.setActive(false)
-    }
+    public kill() {
+        this.setActive(false);
+        this.body.setVelocity(0, 0);
+        this.body.setEnable(false);
+}
 
 }
