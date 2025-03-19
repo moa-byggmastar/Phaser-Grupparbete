@@ -43,7 +43,14 @@ export default class Enemy extends Physics.Arcade.Sprite {
         const index = this.scene.enemies.indexOf(this);
         if (index > -1) {
             // @ts-ignore
-            this.scene.enemies.splice(index, 1);  // Remove the enemy from the enemies list
+            this.scene.enemies.splice(index, 1);
+        }
+
+        // Starts countdown for next wave if there are no enemies left
+        // @ts-ignore
+        if (this.scene.enemies.length === 0) {
+            // @ts-ignore
+            this.scene.waveManager.isWaveActive = false
         }
 
         this.destroy()
