@@ -25,7 +25,6 @@ export default class Player extends Physics.Arcade.Sprite {
         scene.physics.add.existing(this)
 
         this.setCollideWorldBounds(true)
-        this.setDepth(1)
         this.body!.setAllowGravity(false)
 
         // Setup WASD keys
