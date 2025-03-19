@@ -1,10 +1,10 @@
 import { Physics, Scene } from 'phaser'
 
 export default class Enemy extends Physics.Arcade.Sprite {
-    private speed = 25
+    private speed = 140
     private health = 2
-    private targetX: number
-    private targetY: number
+    private targetX!: number
+    private targetY!: number
     declare body: Phaser.Physics.Arcade.Body
 
     constructor(scene: Scene, x: number, y: number, sprite: string) {
@@ -13,14 +13,16 @@ export default class Enemy extends Physics.Arcade.Sprite {
         scene.add.existing(this)
         scene.physics.add.existing(this)
 
-        // Change to fire's position when possible
-        this.targetX = scene.scale.width / 2
-        this.targetY = scene.scale.height / 2
-
         this.body!.setAllowGravity(false)
+        this.setBodySize(27, 30)
     }
 
     public update() {
+        //@ts-ignore
+        this.targetX = this.scene.player.x
+        //@ts-ignore
+        this.targetY = this.scene.player.y
+
         // Calculate angle towards the target
         const angle = Phaser.Math.Angle.Between(this.x, this.y, this.targetX, this.targetY)
         
@@ -46,9 +48,11 @@ export default class Enemy extends Physics.Arcade.Sprite {
             this.scene.enemies.splice(index, 1);
         }
 
-        // Starts countdown for next wave if there are no enemies left
+        // Starts countdown for next wave if there are no enemies left in the wave
         // @ts-ignore
-        if (this.scene.enemies.length === 0) {
+        this.scene.waveManager.enemiesLeftInWave--
+        // @ts-ignore
+        if (this.scene.enemies.length === 0 && this.scene.waveManager.enemiesLeftInWave === 0) {
             // @ts-ignore
             this.scene.waveManager.isWaveActive = false
         }

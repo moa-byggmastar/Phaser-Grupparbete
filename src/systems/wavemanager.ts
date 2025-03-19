@@ -5,10 +5,12 @@ import GameScene from '../scenes/gamescene';
 export default class WaveManager {
     private scene: GameScene;
 
-    private spawnInterval: number = 2000
-    public waveInterval: number = 20000
-    public waveNumber: number = 0
+    private spawnInterval: number = 3000
+    public waveInterval: number = 5000
+    public waveNumber: number = 29
     public isWaveActive: boolean = false
+    public enemyAmount: number = 0
+    public enemiesLeftInWave: number = 0
     private waveManagerEvent!: Phaser.Time.TimerEvent
 
     constructor(scene: Scene) {
@@ -36,13 +38,15 @@ export default class WaveManager {
 
     private startWave() {
         this.isWaveActive = true
+        this.waveNumber++
+        this.enemyAmount = 3 + this.waveNumber - 1
+        this.enemiesLeftInWave = 3 + this.waveNumber - 1
         this.scene.time.addEvent({
-            delay: Math.max(500, this.spawnInterval * Math.pow(0.95, this.waveNumber)), // Decreases spawn interval by 5% each wave, down to a minimum of 500ms
+            delay: Math.max(500, this.spawnInterval * Math.pow(0.941, this.waveNumber)), // Decreases spawn interval each wave, down to a minimum of 500ms at wave 30
             callback: this.spawnEnemy,
             callbackScope: this,
-            repeat: 3 + this.waveNumber - 1
+            repeat: this.enemyAmount - 1
         });
-        this.waveNumber++
     }
 
     private spawnEnemy() {

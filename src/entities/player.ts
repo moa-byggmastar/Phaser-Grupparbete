@@ -6,10 +6,12 @@ export default class Player extends Physics.Arcade.Sprite {
     public health = 4
     public dead = false
     private speed = 125
-    private sprintSpeed = 200
+    private dodgeStrength = 600
+    private dodgeRate = 750
+    private lastDodged = 0
+    private knockbackStrength = 750
     private effectX = 0
     private effectY = 0
-    private knockbackStrength = 750
     private fireRate = 500
     private lastFired = 0
     private invincibleTime = 50
@@ -26,6 +28,7 @@ export default class Player extends Physics.Arcade.Sprite {
 
         this.setCollideWorldBounds(true)
         this.body!.setAllowGravity(false)
+        this.setBodySize(20, 42)
 
         // Setup WASD keys
         this.keys = scene.input.keyboard!.addKeys({
@@ -37,7 +40,7 @@ export default class Player extends Physics.Arcade.Sprite {
             downArrow: Input.Keyboard.KeyCodes.DOWN,
             leftArrow: Input.Keyboard.KeyCodes.LEFT,
             rightArrow: Input.Keyboard.KeyCodes.RIGHT,
-            sprint: Input.Keyboard.KeyCodes.SHIFT,
+            dodge: Input.Keyboard.KeyCodes.SHIFT,
             shoot: Input.Keyboard.KeyCodes.SPACE
         }) as { [key: string]: Input.Keyboard.Key };
     }
@@ -54,10 +57,6 @@ export default class Player extends Physics.Arcade.Sprite {
         let velocityX = 0;
         let velocityY = 0;
 
-        // Determines which speed variable to use (for walking or sprinting)
-        const isSprinting = this.keys.sprint.isDown;
-        const currentSpeed = isSprinting ? this.sprintSpeed : this.speed;
-
         if (this.keys.left.isDown || this.keys.leftArrow.isDown) {
             velocityX = -1;
             this.flipX = true;
@@ -72,11 +71,21 @@ export default class Player extends Physics.Arcade.Sprite {
             velocityY = 1;
         }
 
-        // Makes it so the player doesn't go faster when moving diagonally
+        
         const length = Math.hypot(velocityX, velocityY);
+
+        const time = this.scene.time.now;
+        if (time > this.lastDodged + this.dodgeRate && this.keys.dodge.isDown && (velocityX !== 0 || velocityY !== 0)) {
+            this.effectX += (velocityX / length) * this.dodgeStrength
+            this.effectY += (velocityY / length) * this.dodgeStrength
+
+            this.lastDodged = time
+        }
+
+        // Makes it so the player doesn't go faster when moving diagonally
         if (length > 0) {
-            velocityX = (velocityX / length) * currentSpeed;
-            velocityY = (velocityY / length) * currentSpeed;
+            velocityX = (velocityX / length) * this.speed;
+            velocityY = (velocityY / length) * this.speed;
         }
 
         this.setVelocity(velocityX+this.effectX, velocityY+this.effectY);
@@ -110,13 +119,11 @@ export default class Player extends Physics.Arcade.Sprite {
             const hypot = Math.sqrt(dX*dX+dY*dY)
             dX/=hypot
             dY/=hypot
-            this.effectX = dX * this.knockbackStrength
-            this.effectY = dY * this.knockbackStrength
+            this.effectX += dX * this.knockbackStrength
+            this.effectY += dY * this.knockbackStrength
 
             this.health -= amount
             this.lastDamage = time;
-
-            console.log(`Player health: ${this.health}`)
         }
         
         if (this.health <= 0) {

@@ -20,6 +20,7 @@ export default class GameScene extends Phaser.Scene {
 
     preload() {
         this.load.image('player', 'src/assets/pyre-maid.png')
+        this.load.image('bullet', 'src/assets/bullet.png')
         this.load.image('enemy1', 'src/assets/weakenemy.png')
     };
 
@@ -39,6 +40,8 @@ export default class GameScene extends Phaser.Scene {
 
         // @ts-ignore
         this.physics.add.overlap(this.player, this.enemies, this.handlePlayerEnemyCollision, null, this)
+
+        this.physics.add.collider(this.enemies, this.enemies)
 
     };
 
@@ -72,8 +75,13 @@ export default class GameScene extends Phaser.Scene {
 
         if (this.timeRemaining >= 0 && !this.waveManager.isWaveActive) {
             this.timeRemaining -= delta / 1000;
-        } else if (this.timeRemaining <= 0) {
+        } else if (!this.waveManager.isWaveActive) {
             this.timeRemaining = this.waveManager.waveInterval / 1000;
+        }
+
+        // Ensures timer doesn't get stuck on 0.1s
+        if (this.waveManager.isWaveActive) {
+            this.timeRemaining = 0
         }
 
         if (this.waveManager.waveNumber === 0) {
