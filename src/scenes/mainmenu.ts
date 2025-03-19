@@ -12,8 +12,7 @@ export default class MainMenuScene extends Phaser.Scene {
     };
 
     create() {
-        const titleText = new Text(this, Number(this.game.config.width) / 2, Number(this.game.config.height) / 4, 'PyreBound', 80)
-        titleText.setOrigin(0.5)
+        new Text(this, Number(this.game.config.width) / 2, Number(this.game.config.height) / 4, 'PyreBound', 80)
 
         new Button(this, 'Start game', Number(this.game.config.width) / 2, Number(this.game.config.height) / 2, 160, 60, () => {
             this.scene.start('gamescene')

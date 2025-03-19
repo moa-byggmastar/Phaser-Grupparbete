@@ -61,8 +61,7 @@ export default class GameScene extends Phaser.Scene {
         if (player.dead) {
             player.kill()
 
-            const gameOverText = new Text(this, Number(this.game.config.width) / 2, Number(this.game.config.height) / 2, 'Game Over', 60)
-            gameOverText.setOrigin(0.5)
+            new Text(this, Number(this.game.config.width) / 2, Number(this.game.config.height) / 2, 'Game Over', 60)
             
             this.scene.pause()
         }
