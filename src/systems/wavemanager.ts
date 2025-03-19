@@ -6,8 +6,8 @@ export default class WaveManager {
     private scene: GameScene;
 
     private spawnInterval: number = 3000
-    public waveInterval: number = 5000
-    public waveNumber: number = 29
+    public waveInterval: number = 15000
+    public waveNumber: number = 0
     public isWaveActive: boolean = false
     public enemyAmount: number = 0
     public enemiesLeftInWave: number = 0
