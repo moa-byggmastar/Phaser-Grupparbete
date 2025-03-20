@@ -1,8 +1,8 @@
 import Phaser, { Physics } from 'phaser'
 
 export default class Bullet extends Physics.Arcade.Sprite {
-    private speed = 400;
-    public damage = 1;
+    private speed = 400
+    public damage = 1
     declare body: Phaser.Physics.Arcade.Body;
 
     constructor(scene: Phaser.Scene, x: number, y: number, offset: number = 20) {
