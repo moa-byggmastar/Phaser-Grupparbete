@@ -96,6 +96,7 @@ export default class GameScene extends Phaser.Scene {
 
         this.waveTextUpdate(delta)
         this.enemies.forEach((enemy) => enemy.update());
+        this.bullets.forEach((bullet) => bullet.update());
         this.player.update(delta)
         this.livesUpdate()
         this.waveManager.update()
@@ -103,7 +104,7 @@ export default class GameScene extends Phaser.Scene {
 
     private handleBulletEnemyCollision(bullet: Bullet, enemy: Enemy) {
         enemy.takeDamage(bullet.damage);
-        bullet.destroy();
+        bullet.kill();
     }
 
     private handlePlayerEnemyCollision(player: Player, enemy: Enemy) {
