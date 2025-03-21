@@ -6,7 +6,7 @@ export default class Player extends Physics.Arcade.Sprite {
     public health = 4
     public dead = false
     private speed = 125
-    private dodgeStrength = 600
+    private dodgeStrength = 1000
     private dodgeRate = 750
     private lastDodged = 0
     private knockbackStrength = 750
@@ -40,8 +40,7 @@ export default class Player extends Physics.Arcade.Sprite {
             downArrow: Input.Keyboard.KeyCodes.DOWN,
             leftArrow: Input.Keyboard.KeyCodes.LEFT,
             rightArrow: Input.Keyboard.KeyCodes.RIGHT,
-            dodge: Input.Keyboard.KeyCodes.SHIFT,
-            shoot: Input.Keyboard.KeyCodes.SPACE
+            dodge: Input.Keyboard.KeyCodes.SHIFT
         }) as { [key: string]: Input.Keyboard.Key };
     }
 
@@ -94,7 +93,7 @@ export default class Player extends Physics.Arcade.Sprite {
     private handleShoot() {
         const time = this.scene.time.now;
 
-        if (time > this.lastFired + this.fireRate && this.keys.shoot.isDown) {
+        if (time > this.lastFired + this.fireRate && this.scene.input.activePointer.isDown) {
             const bullet = new Bullet(this.scene, this.x, this.y);
             this.scene.add.existing(bullet);
 

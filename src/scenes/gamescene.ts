@@ -29,23 +29,32 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('enemy1', 'src/assets/weakenemy.png')
         this.load.image('life_full', 'src/assets/life_full.png')
         this.load.image('life_empty', 'src/assets/life_empty.png')
+        this.load.image('pointer', 'src/assets/pointer.png')
     };
 
     create() {
+        this.input.setDefaultCursor('none');
+        const customCursor = this.add.image(0, 0, 'pointer').setDepth(2).setScale(2);
+
+        // Make the custom cursor follow the mouse
+        this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
+            customCursor.setPosition(pointer.x, pointer.y);
+        });
+
         this.player = new Player(this, Number(this.game.config.width) / 2, Number(this.game.config.height) / 2)
-        this.life1 = this.add.image(50, 50, 'life_full')
-        this.life2 = this.add.image(100, 50, 'life_full')
-        this.life3 = this.add.image(150, 50, 'life_full')
-        this.life4 = this.add.image(200, 50, 'life_full')
+        this.life1 = this.add.image(50, 50, 'life_full').setDepth(1)
+        this.life2 = this.add.image(100, 50, 'life_full').setDepth(1)
+        this.life3 = this.add.image(150, 50, 'life_full').setDepth(1)
+        this.life4 = this.add.image(200, 50, 'life_full').setDepth(1)
         this.livesArray = [this.life1, this.life2, this.life3, this.life4]
 
         this.waveManager = new WaveManager(this)
         this.waveManager.startWaveManager()
 
-        this.waveText = new Text(this, Number(this.game.config.width) / 2, 50, 'Wave: ' + this.waveManager.waveNumber, 30)
+        this.waveText = new Text(this, Number(this.game.config.width) / 2, 50, 'Wave: ' + this.waveManager.waveNumber, 30).setDepth(1)
 
         this.timeRemaining = this.waveManager.waveInterval / 1000;
-        this.waveTimer = new Text(this, Number(this.game.config.width) / 2, 75, 'First Wave in:' + this.timeRemaining.toFixed(1) + 's', 15)
+        this.waveTimer = new Text(this, Number(this.game.config.width) / 2, 75, 'First Wave in:' + this.timeRemaining.toFixed(1) + 's', 15).setDepth(1)
 
         // @ts-ignore
         this.physics.add.overlap(this.bullets, this.enemies, this.handleBulletEnemyCollision, null, this)

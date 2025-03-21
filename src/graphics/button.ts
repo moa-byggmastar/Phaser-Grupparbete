@@ -38,7 +38,7 @@ export default class Button extends Phaser.GameObjects.Container {
         this.background.scrollFactorY = 0;
         this.background.on('pointerover', this.onHover, this);
         this.background.on('pointerout', this.onOut, this);
-        this.background.on('pointerdown', this.onClick, this);
+        this.background.on('pointerup', this.onClick, this);
     }
 
     private onHover() {
