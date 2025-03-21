@@ -18,6 +18,11 @@ export default class GameScene extends Phaser.Scene {
     life3!: Phaser.GameObjects.Image;
     life4!: Phaser.GameObjects.Image;
     livesArray!: Phaser.GameObjects.Image[];
+    tutText1!: Text;
+    tutText2!: Text;
+    tutText3!: Text;
+    tutText4!: Text;
+    beginCheck: boolean = false;
 
     constructor() {
         super('gamescene');
@@ -42,19 +47,18 @@ export default class GameScene extends Phaser.Scene {
         });
 
         this.player = new Player(this, Number(this.game.config.width) / 2, Number(this.game.config.height) / 2)
-        this.life1 = this.add.image(50, 50, 'life_full').setDepth(1)
-        this.life2 = this.add.image(100, 50, 'life_full').setDepth(1)
-        this.life3 = this.add.image(150, 50, 'life_full').setDepth(1)
-        this.life4 = this.add.image(200, 50, 'life_full').setDepth(1)
+        this.life1 = this.add.image(55, 50, 'life_full').setDepth(1)
+        this.life2 = this.add.image(105, 50, 'life_full').setDepth(1)
+        this.life3 = this.add.image(155, 50, 'life_full').setDepth(1)
+        this.life4 = this.add.image(205, 50, 'life_full').setDepth(1)
         this.livesArray = [this.life1, this.life2, this.life3, this.life4]
 
         this.waveManager = new WaveManager(this)
-        this.waveManager.startWaveManager()
 
-        this.waveText = new Text(this, Number(this.game.config.width) / 2, 50, 'Wave: ' + this.waveManager.waveNumber, 30).setDepth(1)
+        this.waveText = new Text(this, Number(this.game.config.width) / 2, 42, 'Wave: ' + this.waveManager.waveNumber, 30).setDepth(1)
 
         this.timeRemaining = this.waveManager.waveInterval / 1000;
-        this.waveTimer = new Text(this, Number(this.game.config.width) / 2, 75, 'First Wave in:' + this.timeRemaining.toFixed(1) + 's', 15).setDepth(1)
+        this.waveTimer = new Text(this, Number(this.game.config.width) / 2, 62, 'First Wave in:' + this.timeRemaining.toFixed(1) + 's', 15).setDepth(1)
 
         // @ts-ignore
         this.physics.add.overlap(this.bullets, this.enemies, this.handleBulletEnemyCollision, null, this)
@@ -64,10 +68,29 @@ export default class GameScene extends Phaser.Scene {
 
         this.physics.add.collider(this.enemies, this.enemies)
 
+        this.input.keyboard?.on('keydown', () => {
+            this.tutText1.destroy()
+            this.tutText2.destroy()
+            this.tutText3.destroy()
+            this.tutText4.destroy()
+
+            if (!this.beginCheck) {
+                this.waveManager.startWaveManager()
+            }
+            this.beginCheck = true
+        });
+        this.tutText1 = new Text(this, Number(this.game.config.width) / 2, 150, 'WASD or Arrow keys to move', 25).setDepth(1)
+        this.tutText2 = new Text(this, Number(this.game.config.width) / 2, 200, 'Shift to dodge', 25).setDepth(1)
+        this.tutText3 = new Text(this, Number(this.game.config.width) / 2, 250, 'Click to shoot', 25).setDepth(1)
+        this.tutText4 = new Text(this, Number(this.game.config.width) / 2, 310, 'Press any key to begin', 35).setDepth(1)
+
     };
 
     //@ts-ignore
     update(time: number, delta: number): void {
+        if (!this.beginCheck) {
+            return
+        }
 
         this.waveTextUpdate(delta)
         this.enemies.forEach((enemy) => enemy.update());

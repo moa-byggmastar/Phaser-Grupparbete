@@ -6,7 +6,7 @@ export default class Player extends Physics.Arcade.Sprite {
     public health = 4
     public dead = false
     private speed = 125
-    private dodgeStrength = 1000
+    private dodgeStrength = 850
     private dodgeRate = 750
     private lastDodged = 0
     private knockbackStrength = 750

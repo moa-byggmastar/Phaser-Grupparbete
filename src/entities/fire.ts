@@ -4,7 +4,7 @@ export default class Fire extends Physics.Arcade.Sprite {
     declare body: Phaser.Physics.Arcade.Body
     
     constructor(scene: Scene, x: number, y: number) {
-        super(scene, x, y, 'player')
+        super(scene, x, y, 'fire')
 
         scene.add.existing(this)
         scene.physics.add.existing(this)
@@ -17,3 +17,6 @@ export default class Fire extends Physics.Arcade.Sprite {
     update() {
     }
 }
+
+// Should we remove them, save the space?
+// No, no, no. These are sacred, old dream.

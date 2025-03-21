@@ -16,7 +16,8 @@ const config: Phaser.Types.Core.GameConfig = {
             debug: false
         }
     },
-    antialias: false
+    antialias: false,
+    roundPixels: true
 };
 
 // @ts-ignore
