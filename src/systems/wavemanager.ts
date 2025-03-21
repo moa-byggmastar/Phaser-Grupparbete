@@ -5,7 +5,7 @@ import GameScene from '../scenes/gamescene';
 export default class WaveManager {
     private scene: GameScene;
 
-    private spawnInterval: number = 3000
+    private spawnInterval: number = 500
     public waveInterval: number = 5000
     public waveNumber: number = 0
     public isWaveActive: boolean = false
@@ -42,7 +42,7 @@ export default class WaveManager {
         this.enemyAmount = 3 + this.waveNumber - 1
         this.enemiesLeftInWave = 3 + this.waveNumber - 1
         this.scene.time.addEvent({
-            delay: Math.max(100, this.spawnInterval * Math.pow(0.935, this.waveNumber)), // Decreases spawn interval each wave, down to a minimum of 100ms at wave 30
+            delay: this.spawnInterval,
             callback: this.spawnEnemy,
             callbackScope: this,
             repeat: this.enemyAmount - 1

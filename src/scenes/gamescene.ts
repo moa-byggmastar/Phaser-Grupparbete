@@ -12,6 +12,7 @@ export default class GameScene extends Phaser.Scene {
     waveManager!: WaveManager;
     waveText!: Text;
     waveTimer!: Text;
+    waveRemaining!: Text;
     timeRemaining: number = 0;
     life1!: Phaser.GameObjects.Image;
     life2!: Phaser.GameObjects.Image;
@@ -55,10 +56,11 @@ export default class GameScene extends Phaser.Scene {
 
         this.waveManager = new WaveManager(this)
 
-        this.waveText = new Text(this, Number(this.game.config.width) / 2, 42, 'Wave: ' + this.waveManager.waveNumber, 30).setDepth(1)
+        this.waveText = new Text(this, Number(this.game.config.width) / 2, 30, 'Wave: ' + this.waveManager.waveNumber, 30).setDepth(1)
 
         this.timeRemaining = this.waveManager.waveInterval / 1000;
-        this.waveTimer = new Text(this, Number(this.game.config.width) / 2, 62, 'First Wave in:' + this.timeRemaining.toFixed(1) + 's', 15).setDepth(1)
+        this.waveTimer = new Text(this, Number(this.game.config.width) / 2, 55, 'First Wave in: ' + this.timeRemaining.toFixed(1) + 's', 15).setDepth(1)
+        this.waveRemaining = new Text(this, Number(this.game.config.width) / 2, 75, 'Enemies remaining: ' + this.waveManager.enemiesLeftInWave, 15).setDepth(1)
 
         // @ts-ignore
         this.physics.add.overlap(this.bullets, this.enemies, this.handleBulletEnemyCollision, null, this)
@@ -117,6 +119,7 @@ export default class GameScene extends Phaser.Scene {
 
     private waveTextUpdate(delta: number) {
         this.waveText.text = 'Wave: ' + this.waveManager.waveNumber
+        this.waveRemaining.text = 'Enemies remaining: ' + this.waveManager.enemiesLeftInWave
 
         if (this.timeRemaining >= 0 && !this.waveManager.isWaveActive) {
             this.timeRemaining -= delta / 1000;
