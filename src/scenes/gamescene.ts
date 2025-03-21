@@ -13,6 +13,11 @@ export default class GameScene extends Phaser.Scene {
     waveText!: Text;
     waveTimer!: Text;
     timeRemaining: number = 0;
+    life1!: Phaser.GameObjects.Image;
+    life2!: Phaser.GameObjects.Image;
+    life3!: Phaser.GameObjects.Image;
+    life4!: Phaser.GameObjects.Image;
+    livesArray!: Phaser.GameObjects.Image[];
 
     constructor() {
         super('gamescene');
@@ -22,10 +27,17 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('player', 'src/assets/pyre-maid.png')
         this.load.image('bullet', 'src/assets/bullet.png')
         this.load.image('enemy1', 'src/assets/weakenemy.png')
+        this.load.image('life_full', 'src/assets/life_full.png')
+        this.load.image('life_empty', 'src/assets/life_empty.png')
     };
 
     create() {
         this.player = new Player(this, Number(this.game.config.width) / 2, Number(this.game.config.height) / 2)
+        this.life1 = this.add.image(50, 50, 'life_full')
+        this.life2 = this.add.image(100, 50, 'life_full')
+        this.life3 = this.add.image(150, 50, 'life_full')
+        this.life4 = this.add.image(200, 50, 'life_full')
+        this.livesArray = [this.life1, this.life2, this.life3, this.life4]
 
         this.waveManager = new WaveManager(this)
         this.waveManager.startWaveManager()
@@ -51,6 +63,7 @@ export default class GameScene extends Phaser.Scene {
         this.waveTextUpdate(delta)
         this.enemies.forEach((enemy) => enemy.update());
         this.player.update(delta)
+        this.livesUpdate()
         this.waveManager.update()
     };
 
@@ -88,6 +101,16 @@ export default class GameScene extends Phaser.Scene {
             this.waveTimer.text = 'First Wave in: ' + this.timeRemaining.toFixed(1) + 's';
         } else {
             this.waveTimer.text = 'Next Wave in: ' + this.timeRemaining.toFixed(1) + 's';
+        }
+    }
+
+    private livesUpdate() {
+        for (let i = 0; i < this.livesArray.length; i++) {
+            if (i >= this.player.health) {
+                this.livesArray[i].setTexture('life_empty');
+            } else {
+                this.livesArray[i].setTexture('life_full');
+            }
         }
     }
 };
