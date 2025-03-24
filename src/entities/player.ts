@@ -17,7 +17,7 @@ export default class Player extends Physics.Arcade.Sprite {
     private invincibleTime = 50
     private lastDamage = 0
     
-    private keys!: { [key: string]: Input.Keyboard.Key }; // Stores WASD keys
+    private keys!: { [key: string]: Input.Keyboard.Key }; // Stores keys
     declare body: Phaser.Physics.Arcade.Body
 
     constructor(scene: Scene, x: number, y: number) {
@@ -30,7 +30,7 @@ export default class Player extends Physics.Arcade.Sprite {
         this.body!.setAllowGravity(false)
         this.setBodySize(20, 42)
 
-        // Setup WASD keys
+        // Setup keys
         this.keys = scene.input.keyboard!.addKeys({
             up: Input.Keyboard.KeyCodes.W,
             down: Input.Keyboard.KeyCodes.S,
