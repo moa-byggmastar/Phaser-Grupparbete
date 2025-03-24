@@ -24,6 +24,8 @@ export default class GameScene extends Phaser.Scene {
     tutText3!: Text;
     tutText4!: Text;
     beginCheck: boolean = false;
+    enemiesKilled: number = 0;
+    playerLevelText!: Text;
 
     constructor() {
         super('gamescene');
@@ -86,6 +88,8 @@ export default class GameScene extends Phaser.Scene {
         this.tutText3 = new Text(this, Number(this.game.config.width) / 2, 250, 'Click to shoot', 25).setDepth(1)
         this.tutText4 = new Text(this, Number(this.game.config.width) / 2, 310, 'Press any key to begin', 35).setDepth(1)
 
+        this.playerLevelText = new Text(this, 78, 80, 'Level: ' + this.player.level, 15).setDepth(1)
+
     };
 
     //@ts-ignore
@@ -100,6 +104,7 @@ export default class GameScene extends Phaser.Scene {
         this.player.update(delta)
         this.livesUpdate()
         this.waveManager.update()
+        this.levelUpdate()
     };
 
     private handleBulletEnemyCollision(bullet: Bullet, enemy: Enemy) {
@@ -148,5 +153,10 @@ export default class GameScene extends Phaser.Scene {
                 this.livesArray[i].setTexture('life_full');
             }
         }
+    }
+
+    private levelUpdate() {
+        this.player.level = (this.enemiesKilled / 10)
+        this.playerLevelText.text = 'Level: ' + this.player.level.toFixed(0)
     }
 };

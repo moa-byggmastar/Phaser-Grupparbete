@@ -48,6 +48,9 @@ export default class Enemy extends Physics.Arcade.Sprite {
             this.scene.enemies.splice(index, 1);
         }
 
+        // @ts-ignore
+        this.scene.enemiesKilled++
+
         // Starts countdown for next wave if there are no enemies left in the wave
         // @ts-ignore
         this.scene.waveManager.enemiesLeftInWave--

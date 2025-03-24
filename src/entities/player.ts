@@ -5,6 +5,7 @@ import Enemy from './enemy'
 export default class Player extends Physics.Arcade.Sprite {
     public health = 4
     public dead = false
+    public level = 0
     private speed = 125
     private dodgeStrength = 850
     private dodgeRate = 750
