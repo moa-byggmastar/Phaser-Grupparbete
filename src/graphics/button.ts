@@ -27,7 +27,7 @@ export default class Button extends Phaser.GameObjects.Container {
         this.background.setOrigin(0.5);
         this.add(this.background);
 
-        this.label = new Text(scene, 0, 0, text, 28, 'black');
+        this.label = new Text(scene, 0, 0, text, 24, 'white');
         this.add(this.label);
 
         this.background.setInteractive();
