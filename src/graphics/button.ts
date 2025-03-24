@@ -20,7 +20,7 @@ export default class Button extends Phaser.GameObjects.Container {
         super(scene, x, y);
 
         this.color = 0xe31754;
-        this.hoverColor = 0xed85b4;
+        this.hoverColor = 0xff6e6e;
         this.callback = callback;
 
         this.background = scene.add.rectangle(0, 0, width, height, this.color);
